@@ -1,0 +1,255 @@
+ERROR:root:Error executing query: 
+            SELECT COALESCE(SUM(total * 0.1), 0)  -- 10% \u043e\u0442 \u0441\u0443\u043c\u043c\u044b \u0437\u0430\u043a\u0430\u0437\u043e\u0432
+            FROM orders
+            WHERE waiter_id = %s 
+            AND created_at BETWEEN (SELECT start_time FROM shifts WHERE id = %s) AND NOW()
+            AND status = 'paid'
+        
+Error: tuple index out of range
+ERROR:root:Error executing query: 
+                SELECT 
+                    u.full_name,
+                    t.id,
+                    r.start_time,
+                    r.end_time,
+                    EXTRACT(EPOCH FROM (r.end_time - r.start_time))/60 as duration_minutes,
+                    COUNT(DISTINCT o.id) as orders_count,
+                    COALESCE(SUM(o.total), 0) as total_sum
+                FROM reservations r
+                JOIN users u ON r.client_id = u.id
+                JOIN tables t ON r.table_id = t.id
+                LEFT JOIN orders o ON o.table_id = t.id 
+                    AND o.created_at BETWEEN r.start_time AND r.end_time
+                WHERE r.date BETWEEN %s AND %s
+                AND r.status = 'completed'
+                GROUP BY u.full_name, t.id, r.start_time, r.end_time
+                ORDER BY r.start_time DESC
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u043f\u0435\u0440\u0430\u0442\u043e\u0440 \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442: timestamp without time zone >= time without time zone
+LINE 14:                     AND o.created_at BETWEEN r.start_time AN...
+                                              ^
+HINT:  \u041e\u043f\u0435\u0440\u0430\u0442\u043e\u0440 \u0441 \u0434\u0430\u043d\u043d\u044b\u043c\u0438 \u0438\u043c\u0435\u043d\u0435\u043c \u0438 \u0442\u0438\u043f\u0430\u043c\u0438 \u0430\u0440\u0433\u0443\u043c\u0435\u043d\u0442\u043e\u0432 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d. \u0412\u043e\u0437\u043c\u043e\u0436\u043d\u043e, \u0432\u0430\u043c \u0441\u043b\u0435\u0434\u0443\u0435\u0442 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u044f\u0432\u043d\u044b\u0435 \u043f\u0440\u0438\u0432\u0435\u0434\u0435\u043d\u0438\u044f \u0442\u0438\u043f\u043e\u0432.
+
+ERROR:root:Error executing query: 
+                SELECT 
+                    u.full_name,
+                    t.id,
+                    r.start_time,
+                    r.end_time,
+                    EXTRACT(EPOCH FROM (r.end_time - r.start_time))/60 as duration_minutes,
+                    COUNT(DISTINCT o.id) as orders_count,
+                    COALESCE(SUM(o.total), 0) as total_sum
+                FROM reservations r
+                JOIN users u ON r.client_id = u.id
+                JOIN tables t ON r.table_id = t.id
+                LEFT JOIN orders o ON o.table_id = t.id 
+                    AND o.created_at BETWEEN r.start_time AND r.end_time
+                WHERE r.date BETWEEN %s AND %s
+                AND r.status = 'completed'
+                GROUP BY u.full_name, t.id, r.start_time, r.end_time
+                ORDER BY r.start_time DESC
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u043f\u0435\u0440\u0430\u0442\u043e\u0440 \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442: timestamp without time zone >= time without time zone
+LINE 14:                     AND o.created_at BETWEEN r.start_time AN...
+                                              ^
+HINT:  \u041e\u043f\u0435\u0440\u0430\u0442\u043e\u0440 \u0441 \u0434\u0430\u043d\u043d\u044b\u043c\u0438 \u0438\u043c\u0435\u043d\u0435\u043c \u0438 \u0442\u0438\u043f\u0430\u043c\u0438 \u0430\u0440\u0433\u0443\u043c\u0435\u043d\u0442\u043e\u0432 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d. \u0412\u043e\u0437\u043c\u043e\u0436\u043d\u043e, \u0432\u0430\u043c \u0441\u043b\u0435\u0434\u0443\u0435\u0442 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u044f\u0432\u043d\u044b\u0435 \u043f\u0440\u0438\u0432\u0435\u0434\u0435\u043d\u0438\u044f \u0442\u0438\u043f\u043e\u0432.
+
+ERROR:root:Error executing query: 
+                    UPDATE dishes 
+                    SET quantity = quantity - %s 
+                    WHERE id = %s
+                
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043d\u043e\u0432\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u0432 \u043e\u0442\u043d\u043e\u0448\u0435\u043d\u0438\u0438 "dishes" \u043d\u0430\u0440\u0443\u0448\u0430\u0435\u0442 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435-\u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0443 "dishes_quantity_check"
+DETAIL:  \u041e\u0448\u0438\u0431\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u0442 (5, \u0422\u0438\u0440\u0430\u043c\u0438\u0441\u0443, 4, 320.00, -1, null).
+
+ERROR:root:Error executing query: 
+                    UPDATE dishes 
+                    SET quantity = quantity - %s 
+                    WHERE id = %s
+                
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043d\u043e\u0432\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u0432 \u043e\u0442\u043d\u043e\u0448\u0435\u043d\u0438\u0438 "dishes" \u043d\u0430\u0440\u0443\u0448\u0430\u0435\u0442 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435-\u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0443 "dishes_quantity_check"
+DETAIL:  \u041e\u0448\u0438\u0431\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u0442 (5, \u0422\u0438\u0440\u0430\u043c\u0438\u0441\u0443, 4, 320.00, -1, null).
+
+ERROR:root:Error executing query: 
+                SELECT 
+                    u.full_name as client,
+                    t.id as table_id,
+                    r.date + r.start_time as start_time,
+                    r.date + r.end_time as end_time,
+                    EXTRACT(EPOCH FROM (r.end_time - r.start_time))/60 as duration_minutes,
+                    COUNT(DISTINCT o.id) as orders_count,
+                    COALESCE(SUM(o.total), 0) as total_sum
+                FROM reservations r
+                JOIN users u ON r.client_id = u.id
+                JOIN tables t ON r.table_id = t.id
+                LEFT JOIN orders o ON o.table_id = t.id 
+                    AND o.created_at BETWEEN 
+                        (r.date + r.start_time)::timestamp 
+                        AND (r.date + r.end_time)::timestamp
+                    AND o.status = 'paid'  # \u0422\u043e\u043b\u044c\u043a\u043e \u043e\u043f\u043b\u0430\u0447\u0435\u043d\u043d\u044b\u0435 \u0437\u0430\u043a\u0430\u0437\u044b
+                WHERE r.date BETWEEN %s AND %s
+                AND r.status IN ('completed', 'active')  # \u041e\u0431\u0430 \u0441\u0442\u0430\u0442\u0443\u0441\u0430
+                GROUP BY u.full_name, t.id, r.date, r.start_time, r.end_time
+                ORDER BY r.date DESC, r.start_time DESC
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u0448\u0438\u0431\u043a\u0430 \u0441\u0438\u043d\u0442\u0430\u043a\u0441\u0438\u0441\u0430 (\u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e\u0435 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435: "\u043e\u043f\u043b\u0430\u0447\u0435\u043d\u043d\u044b\u0435")
+LINE 17: ...                  AND o.status = 'paid'  # \u0422\u043e\u043b\u044c\u043a\u043e \u043e\u043f\u043b\u0430\u0447\u0435\u043d\u043d\u044b\u0435...
+                                                              ^
+
+ERROR:root:Error executing query: 
+                SELECT COALESCE(SUM(total * 0.1), 0)  -- 10% \u043e\u0442 \u0441\u0443\u043c\u043c\u044b \u0437\u0430\u043a\u0430\u0437\u043e\u0432
+                FROM orders
+                WHERE waiter_id = %s 
+                AND created_at BETWEEN 
+                    (SELECT start_time FROM shifts WHERE id = %s) 
+                    AND NOW()
+                AND status = 'paid'
+            
+Error: tuple index out of range
+ERROR:root:Error executing query: 
+                SELECT COALESCE(SUM(total * 0.1), 0)  -- 10% \u043e\u0442 \u0441\u0443\u043c\u043c\u044b \u0437\u0430\u043a\u0430\u0437\u043e\u0432
+                FROM orders
+                WHERE waiter_id = %s 
+                AND created_at BETWEEN 
+                    (SELECT start_time FROM shifts WHERE id = %s) 
+                    AND NOW()
+                AND status = 'paid'
+            
+Error: tuple index out of range
+ERROR:root:Error executing query: 
+                INSERT INTO reservations 
+                (date, start_time, end_time, guests, table_id, client_id, status) 
+                VALUES (%s, %s, %s, %s, %s, %s, 'active')
+                RETURNING id
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043d\u043e\u0432\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u0432 \u043e\u0442\u043d\u043e\u0448\u0435\u043d\u0438\u0438 "reservations" \u043d\u0430\u0440\u0443\u0448\u0430\u0435\u0442 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435-\u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0443 "reservations_check"
+DETAIL:  \u041e\u0448\u0438\u0431\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u0442 (20, 2025-06-24, 11:23:00, 01:23:00, 2, 4, 1, 2025-06-24 20:23:18.935294, active).
+
+ERROR:root:Error executing query: 
+                INSERT INTO reservations 
+                (date, start_time, end_time, guests, table_id, client_id, status) 
+                VALUES (%s, %s, %s, %s, %s, %s, 'active')
+                RETURNING id
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043d\u043e\u0432\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u0432 \u043e\u0442\u043d\u043e\u0448\u0435\u043d\u0438\u0438 "reservations" \u043d\u0430\u0440\u0443\u0448\u0430\u0435\u0442 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435-\u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0443 "reservations_check"
+DETAIL:  \u041e\u0448\u0438\u0431\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u0442 (21, 2025-06-24, 12:23:00, 01:23:00, 2, 4, 1, 2025-06-24 20:24:04.363665, active).
+
+ERROR:root:Error executing query: 
+                    SELECT 
+                        u.full_name as client,
+                        t.id as table_id,
+                        r.date + r.start_time as start_time,
+                        r.date + r.end_time as end_time,
+                        EXTRACT(EPOCH FROM (r.end_time - r.start_time))/60 as duration,
+                        COUNT(DISTINCT o.id) as orders_count,
+                        COALESCE(SUM(o.total), 0) as total_sum,
+                        STRING_AGG(DISTINCT o.id::text, ', ') as order_ids  # \u0414\u043b\u044f \u043e\u0442\u043b\u0430\u0434\u043a\u0438
+                    FROM reservations r
+                    JOIN users u ON r.client_id = u.id
+                    JOIN tables t ON r.table_id = t.id
+                    LEFT JOIN orders o ON o.table_id = t.id 
+                        AND o.created_at::date = r.date  # \u041f\u0440\u043e\u0441\u0442\u043e \u043f\u043e \u0434\u0430\u0442\u0435, \u0431\u0435\u0437 \u0442\u043e\u0447\u043d\u043e\u0433\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u0438
+                        AND o.status = 'paid'
+                    WHERE r.date BETWEEN %s AND %s
+                    AND r.status IN ('completed', 'active')
+                    GROUP BY u.full_name, t.id, r.date, r.start_time, r.end_time
+                    ORDER BY r.date DESC, r.start_time DESC
+                
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u0448\u0438\u0431\u043a\u0430 \u0441\u0438\u043d\u0442\u0430\u043a\u0441\u0438\u0441\u0430 (\u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e\u0435 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435: "#")
+LINE 10: ...RING_AGG(DISTINCT o.id::text, ', ') as order_ids  # \u0414\u043b\u044f \u043e\u0442\u043b\u0430...
+                                                              ^
+
+ERROR:root:Error executing query: 
+                SELECT 
+                    u.full_name as client,
+                    t.id as table_id,
+                    r.date + r.start_time as start_time,
+                    r.date + r.end_time as end_time,
+                    EXTRACT(EPOCH FROM (r.end_time - r.start_time))/60 as duration_min,
+                    COUNT(o.id) as order_count,
+                    COALESCE(SUM(o.total), 0) as total_sum,
+                    STRING_AGG(DISTINCT o.id::text, ', ') as order_ids
+                FROM reservations r
+                JOIN users u ON r.client_id = u.id
+                JOIN tables t ON r.table_id = t.id
+                LEFT JOIN orders o ON o.table_id = r.table_id
+                    AND (
+                        -- \u0412\u0430\u0440\u0438\u0430\u043d\u0442 1: \u0417\u0430\u043a\u0430\u0437 \u0441\u043e\u0437\u0434\u0430\u043d \u0432\u043e \u0432\u0440\u0435\u043c\u044f \u0431\u0440\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f
+                        (o.created_at BETWEEN (r.date + r.start_time) AND (r.date + r.end_time))
+                        -- \u0418\u041b\u0418 \u0412\u0430\u0440\u0438\u0430\u043d\u0442 2: \u0411\u0440\u043e\u043d\u044c \u0441\u043e\u0437\u0434\u0430\u043d\u0430 \u0434\u043b\u044f \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044e\u0449\u0435\u0433\u043e \u0437\u0430\u043a\u0430\u0437\u0430
+                        OR (r.created_at BETWEEN o.created_at AND o.created_at + interval '1 hour')
+                    )
+                    AND o.status IN ('paid', 'completed', 'active')  # \u0412\u0441\u0435 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u044b\u0435 \u0441\u0442\u0430\u0442\u0443\u0441\u044b
+                WHERE r.date BETWEEN %s AND %s
+                AND r.status = 'active'
+                GROUP BY u.full_name, t.id, r.date, r.start_time, r.end_time
+                ORDER BY r.date DESC, r.start_time DESC
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u0448\u0438\u0431\u043a\u0430 \u0441\u0438\u043d\u0442\u0430\u043a\u0441\u0438\u0441\u0430 (\u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e\u0435 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435: "\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u044b\u0435")
+LINE 21: ....status IN ('paid', 'completed', 'active')  # \u0412\u0441\u0435 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u044b\u0435 ...
+                                                              ^
+
+ERROR:root:Error executing query: 
+                SELECT o.id, o.created_at, o.total, 
+                    STRING_AGG(d.name || ' (' || oi.quantity || 'x' || oi.price || ' \u0440\u0443\u0431.)', ', ')
+                FROM orders o
+                JOIN order_items oi ON o.id = oi.order_id
+                JOIN dishes d ON oi.dish_id = d.id
+                WHERE o.client_id = %s 
+                AND o.created_at::date BETWEEN %s AND %s
+                AND o.waiter_id = %s  # \u0422\u043e\u043b\u044c\u043a\u043e \u0437\u0430\u043a\u0430\u0437\u044b \u044d\u0442\u043e\u0433\u043e \u043e\u0444\u0438\u0446\u0438\u0430\u043d\u0442\u0430
+                GROUP BY o.id
+                ORDER BY o.created_at
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u0448\u0438\u0431\u043a\u0430 \u0441\u0438\u043d\u0442\u0430\u043a\u0441\u0438\u0441\u0430 (\u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e\u0435 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435: "\u0437\u0430\u043a\u0430\u0437\u044b")
+LINE 9:                 AND o.waiter_id = 2  # \u0422\u043e\u043b\u044c\u043a\u043e \u0437\u0430\u043a\u0430\u0437\u044b \u044d\u0442\u043e\u0433\u043e \u043e...
+                                                      ^
+
+ERROR:root:Error executing query: 
+                SELECT o.id, o.created_at, o.total, 
+                    STRING_AGG(d.name || ' (' || oi.quantity || 'x' || oi.price || ' \u0440\u0443\u0431.)', ', ')
+                FROM orders o
+                JOIN order_items oi ON o.id = oi.order_id
+                JOIN dishes d ON oi.dish_id = d.id
+                WHERE o.client_id = %s 
+                AND o.created_at::date BETWEEN %s AND %s
+                AND o.waiter_id = %s  # \u0418\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0437\u0434\u0435\u0441\u044c!
+                GROUP BY o.id
+                ORDER BY o.created_at
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u0448\u0438\u0431\u043a\u0430 \u0441\u0438\u043d\u0442\u0430\u043a\u0441\u0438\u0441\u0430 (\u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e\u0435 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435: "\u0437\u0434\u0435\u0441\u044c")
+LINE 9:                 AND o.waiter_id = 2  # \u0418\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0437\u0434\u0435\u0441\u044c!
+                                                          ^
+
+ERROR:root:Error executing query: 
+                SELECT o.id, o.created_at, o.total, 
+                    STRING_AGG(d.name || ' (' || oi.quantity || 'x' || oi.price || ' \u0440\u0443\u0431.)', ', ')
+                FROM orders o
+                JOIN order_items oi ON o.id = oi.order_id
+                JOIN dishes d ON oi.dish_id = d.id
+                WHERE o.client_id = %s 
+                AND o.created_at::date BETWEEN %s AND %s
+                AND o.waiter_id = %s  # \u0418\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0437\u0434\u0435\u0441\u044c!
+                GROUP BY o.id
+                ORDER BY o.created_at
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u0448\u0438\u0431\u043a\u0430 \u0441\u0438\u043d\u0442\u0430\u043a\u0441\u0438\u0441\u0430 (\u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e\u0435 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435: "\u0437\u0434\u0435\u0441\u044c")
+LINE 9:                 AND o.waiter_id = 2  # \u0418\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0437\u0434\u0435\u0441\u044c!
+                                                          ^
+
+ERROR:root:Error executing query: 
+                SELECT o.id, o.created_at, o.total, 
+                    STRING_AGG(d.name || ' (' || oi.quantity || 'x' || oi.price || ' \u0440\u0443\u0431.)', ', ')
+                FROM orders o
+                JOIN order_items oi ON o.id = oi.order_id
+                JOIN dishes d ON oi.dish_id = d.id
+                WHERE o.client_id = %s 
+                AND o.created_at::date BETWEEN %s AND %s
+                AND o.waiter_id = %s  # \u0418\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0437\u0434\u0435\u0441\u044c!
+                GROUP BY o.id
+                ORDER BY o.created_at
+            
+Error: \u041e\u0428\u0418\u0411\u041a\u0410:  \u043e\u0448\u0438\u0431\u043a\u0430 \u0441\u0438\u043d\u0442\u0430\u043a\u0441\u0438\u0441\u0430 (\u043f\u0440\u0438\u043c\u0435\u0440\u043d\u043e\u0435 \u043f\u043e\u043b\u043e\u0436\u0435\u043d\u0438\u0435: "\u0437\u0434\u0435\u0441\u044c")
+LINE 9:                 AND o.waiter_id = 2  # \u0418\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0437\u0434\u0435\u0441\u044c!
+                                                          ^
+
